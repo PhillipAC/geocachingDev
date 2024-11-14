@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="https://www.webglearth.com/v2/api.js"></script>
+    <script>
+      var targetMarker;
+      var userMarker;
+      var userX = 34.657264;
+      var userY = -86.485851;
+      var speed = 0.00001;
+      function initialize() {
+        var earth = new WE.map('earth_div');
+        WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(earth); 
+        userMarker = WE.marker([34.657264, -86.485851]).addTo(earth);
+        userMarker.bindPopup("User", {maxWidth: 120, closeButton: true});
+	      targetMarker = WE.marker([34.6267, -86.470968]).addTo(earth);
+		    targetMarker.bindPopup("Target", {maxWidth: 120, closeButton: true});
+        
+        earth.setView([34.657264, -86.485851], 15);
+        setInterval(() => {
+          navigator.geolocation.getCurrentPosition(function(location) {
+            userX = location.coords.latitude;
+            userY = location.coords.longitude;
+            userMarker.setPosition(userX, userY)
+            earth.setView([userX, userY])
+          });
+        }, 500)
+      }
+
+    </script>
+    <style>
+      html, body{padding: 0; margin: 0; background-color: black;}
+      #earth_div{top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;}
+    </style>
+    <title>WebGL Earth API: Markers and pop-up on a globe example</title>
+    <meta name="description" content="Add markers with a pop-up to an open-source 3D globe and display it on a web or mobile devices.">
+  </head>
+  <body onload="initialize()">
+    <div id="earth_div"></div>
+  </body>
+</html>
