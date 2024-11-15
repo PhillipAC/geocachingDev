@@ -3,61 +3,78 @@
   <head>
     <script src="https://www.webglearth.com/v2/api.js"></script>
     <script>
+      var eath;
       var targetMarker;
       var userMarker;
       var userX = 34.657264;
       var userY = -86.485851;
       var speed = 0.00001;
+      var zoom = 18;
+
       function initialize() {
-        var earth = new WE.map('earth_div');
+        earth = new WE.map('earth_div');
         WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(earth); 
         userMarker = WE.marker([34.657264, -86.485851]).addTo(earth);
         userMarker.bindPopup("User", {maxWidth: 120, closeButton: true});
 	      targetMarker = WE.marker([34.640572,-86.479275]).addTo(earth);
 		    targetMarker.bindPopup("Target", {maxWidth: 120, closeButton: true});
         
-        earth.setView([34.657264, -86.485851], 18);
+        earth.setView([34.657264, -86.485851], zoom);
         setInterval(() => {
           navigator.geolocation.getCurrentPosition(function(location) {
             userX = location.coords.latitude;
             userY = location.coords.longitude;
             userMarker.setPosition(userX, userY)
             earth.setView([userX, userY])
-            console.log(location.coords)
             document.getElementById("compass").style.transform = "rotate("+location.coords.heading+"deg)";
-            document.getElementById("coordinates").innerHTML = userX + " , " + userY;
+            document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
           });
         }, 500)
+      }
+
+      function zoomIn() {
+        console.log(zoom);
+        if(zoom < 20)
+          zoom++;
+        earth.setZoom(zoom);
+      }
+
+      function zoomOut() {
+        console.log(zoom);
+        if(zoom > 0)
+          zoom--;
+        earth.setZoom(zoom);
       }
 
     </script>
     <style>
       html, body{padding: 0; margin: 0}
       #earth_div{
-        position: absolute;
-        top: 1vh; 
-        left: 5vw;
+        margin: 1vh 5vw;
         height: 50vh;
         width: 90vw;
       }
       #coordinates{
-        position: absolute;
-        top: 52vh;
-        left: 5vw;
+        margin-left: 5vw;
         font-size: 2vh;
       }
       #compass{
-        position: absolute;
-        top: 55vh;
-        left: 50vw;
-        width: 50vw;
+        float: right;
+        right: 0;
+        height: 45vh;
       }
       #description{
-        position: absolute;
-        left: 5vw;
+        margin-left: 5vw;
         font-size: 2vh;
         top: 55vh;
         width: 45vw;
+      }
+      .center{
+        margin: auto;
+        width: 50%;
+      }
+      .zoom-button{
+        font-size: 2vh;
       }
     </style>
     <title>Geocaching</title>
@@ -66,8 +83,13 @@
   </head>
   <body onload="initialize()">
     <div id="earth_div"></div>
-    <div id="coordinates"></div>
+    <div class="center">
+    <b class="zoom-button">Zoom</b>
+    <button id="zoom-out" class="zoom-button" onclick="zoomOut()">-</button>
+    <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
+    </div>
+    <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
     <img id="compass" src="images/compass.png" alt="Compass"/>
-    <div id="description">Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
+    <div id="description"><b>Hint: </b>Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
   </body>
 </html>
