@@ -23,14 +23,27 @@
             userY = location.coords.longitude;
             userMarker.setPosition(userX, userY)
             earth.setView([userX, userY])
+            document.getElementById("compass").style = "transform: rotate("+location.coords.heading+"deg)";
+            document.getElementById("coordinates").innerHTML = userX + " , " + userY;
           });
         }, 500)
       }
 
     </script>
     <style>
-      html, body{padding: 0; margin: 0; background-color: black;}
-      #earth_div{top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;}
+      html, body{padding: 0; margin: 0}
+      #earth_div{
+        top: 1vh; 
+        left: 5vw;
+        height: 50vh;
+        width: 90vw;
+      }
+      .coordinates{
+        top: 50%;
+      }
+      #compass{
+        width: 50vw;
+      }
     </style>
     <title>Geocaching</title>
     <meta name="description" 
@@ -38,5 +51,7 @@
   </head>
   <body onload="initialize()">
     <div id="earth_div"></div>
+    <div id="coordinates"></div>
+    <img id="compass" src="images/compass.png" alt="Compass"/>
   </body>
 </html>
