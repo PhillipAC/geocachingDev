@@ -13,6 +13,8 @@
       var speed = 0.00001;
       var zoom = 18;
       var rot = 0;
+      var minimumWait = 200;
+      var nextWait;
 
       function degreesToRadians(degrees) {
           return degrees * (Math.PI / 180);
@@ -45,20 +47,33 @@
 		    targetMarker.bindPopup("Target", {maxWidth: 120, closeButton: true});
         
         earth.setView([userX, userY], zoom);
-        setInterval(() => {
-          navigator.geolocation.getCurrentPosition(function(location) {
-            userX = location.coords.latitude;
-            userY = location.coords.longitude;
-            userMarker.setPosition(userX, userY)
-            earth.setView([userX, userY])
-            document.getElementById("distance").innerHTML = "" + distanceInKm(userX, userY, targetX, targetY) * 3280.84 + " feet";
-            if(location.coords.heading != null)
-              rot = location.coords.heading;
-            document.getElementById("compass").style.transform = "rotate(" + rot +"deg)";
-            document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
-            document.getElementById("timestamp").innerHTML = location.timestamp;   
-          }, function(x){}, {enableHighAccuracy: true});
-        }, 200)
+        nextWait = Date.now() + minimumWait;
+        getPosition();
+      }
+
+      function getPosition()
+      {
+        navigator.geolocation.getCurrentPosition(updateUI, function(x){}, {enableHighAccuracy: true});
+      }
+
+      function updateUI(location)
+      {
+          userX = location.coords.latitude;
+          userY = location.coords.longitude;
+          userMarker.setPosition(userX, userY)
+          earth.setView([userX, userY])
+          document.getElementById("distance").innerHTML = "" + toDecimal(distanceInKm(userX, userY, targetX, targetY) * 3280.84, 2) + " feet";
+          if(location.coords.heading != null)
+            rot = location.coords.heading;
+          document.getElementById("compass").style.transform = "rotate(" + rot +"deg)";
+          document.getElementById("coordinate-numbers").innerHTML = "<br>" +userX + "<br>" + userY;
+          document.getElementById("timestamp").innerHTML = location.timestamp; 
+          var currentTime = Date.now();
+          var timeout = nextWait - currentTime
+          if(timeout < 0)
+            timeout = 0;
+          nextWait = Date.now() + minimumWait;
+          setTimeout(getPosition, timeout)
       }
 
       function zoomIn() {
@@ -75,30 +90,35 @@
         earth.setZoom(zoom);
       }
 
+      function toDecimal(value, decimalCount)
+      {
+        return Number.parseFloat(value).toFixed(decimalCount);
+      }
+
     </script>
     <style>
       html, body{padding: 0; margin: 0}
       #earth_div{
-        margin: 1vh 5vw;
+        margin-bottom: 1vh;
         height: 50vh;
         width: 90vw;
       }
       #coordinates{
-        margin-left: 5vw;
         font-size: 2vh;
+        width: 50vw;
       }
       #distance-area{
-        margin-left: 5vw;
         font-size: 2vh;
+        width: 50vw;
       }
       #compass-box{
         float: right; 
         width: 45vw;
         height: 45vw;
-        border-width: 1px;
+        /*border-width: 1px;
         border-color: black;
         border-style: solid;
-        border-radius: 20px;
+        border-radius: 20px;*/
         display: flex;
         align-items: center;
         justify-content: center;
@@ -107,15 +127,21 @@
         float: center;
         right: 0;
         width: 30vw;
+        border-style: solid;
+        border-color: black;
+        border-radius: 100%;
       }
       #description{
-        margin-left: 5vw;
         font-size: 2vh;
         top: 55vh;
         width: 45vw;
       }
       .container{
         position: relative;
+        margin-left: 5vw;
+        padding-top: 5vw;
+        padding-right: 5vw;
+        padding-bottom: 0;
       }
       .center{
         margin: auto;
@@ -136,16 +162,14 @@
   <body onload="initialize()">
     <div class="container">
       <div id="earth_div"></div>
-      <div class="center">
       <b class="zoom-button">Zoom</b>
       <button id="zoom-out" class="zoom-button" onclick="zoomOut()">-</button>
       <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
-      </div>
-      <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
-      <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="compass-box">
         <img id="compass" src="images/compass.png" alt="Compass"/>
       </div>
+      <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
+      <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>A hint place holder that I am putting right here.</div>
       <div id="footer">v1.8 Timestamp: <span id="timestamp"></span></div>
     </div>
