@@ -12,6 +12,7 @@
       var targetY = -86.479275;
       var speed = 0.00001;
       var zoom = 18;
+      var rot = 0;
 
       function degreesToRadians(degrees) {
           return degrees * (Math.PI / 180);
@@ -54,7 +55,7 @@
             document.getElementById("compass").style.transform = "rotate("+location.coords.heading+"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
           }, function(x){}, {enableHighAccuracy: true});
-        }, 500)
+        }, 200)
       }
 
       function zoomIn() {
@@ -87,10 +88,15 @@
         margin-left: 5vw;
         font-size: 2vh;
       }
-      #compass{
-        float: right;
-        right: 0;
+      #compass-box{
+        float: right; 
         width: 45vw;
+        height: 45vw;
+      }
+      #compass{
+        float: center;
+        right: 0;
+        width: 30vw;
       }
       #description{
         margin-left: 5vw;
@@ -119,7 +125,9 @@
     </div>
     <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
     <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
-    <img id="compass" src="images/compass.png" alt="Compass"/>
+    <div id="compass-box">
+      <img id="compass" src="images/compass.png" alt="Compass"/>
+    </div>
     <div id="description"><b>Hint: </b>Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
   </body>
 </html>
