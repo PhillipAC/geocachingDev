@@ -65,7 +65,7 @@
           document.getElementById("distance").innerHTML = "" + toDecimal(distanceInKm(userX, userY, targetX, targetY) * 3280.84, 2) + " feet";
           if(location.coords.heading != null)
             rot = location.coords.heading;
-          document.getElementById("compass").style.transform = "rotate(" + 360 - rot +"deg)";
+          document.getElementById("compass").style.transform = "rotate(-" + rot +"deg)";
           document.getElementById("coordinate-numbers").innerHTML = "<br>" +userX + "<br>" + userY;
           document.getElementById("timestamp").innerHTML = location.timestamp; 
           var currentTime = Date.now();
