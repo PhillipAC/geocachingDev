@@ -52,7 +52,8 @@
             userMarker.setPosition(userX, userY)
             earth.setView([userX, userY])
             document.getElementById("distance").innerHTML = "" + distanceInKm(userX, userY, targetX, targetY) * 3280.84 + " feet";
-            rot = location.coords.heading;
+            if(location.coords.heading != null)
+              rot = location.coords.heading;
             document.getElementById("heading").innerHTML = rot;
             document.getElementById("compass").style.transform = "rotate(" + (-1 * rot)+"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
