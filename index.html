@@ -52,8 +52,10 @@
             userMarker.setPosition(userX, userY)
             earth.setView([userX, userY])
             document.getElementById("distance").innerHTML = "" + distanceInKm(userX, userY, targetX, targetY) * 3280.84 + " feet";
-            document.getElementById("compass").style.transform = "rotate("+location.coords.heading+"deg)";
+            rot = location.coords.heading;
+            document.getElementById("compass").style.transform = "rotate("+rot+"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
+            document.getElementById("timestamp").innerHTML = location.timestamp;   
           }, function(x){}, {enableHighAccuracy: true});
         }, 200)
       }
@@ -111,6 +113,9 @@
         top: 55vh;
         width: 45vw;
       }
+      .container{
+        position: relative;
+      }
       .center{
         margin: auto;
         width: 50%;
@@ -118,23 +123,30 @@
       .zoom-button{
         font-size: 2vh;
       }
+      #footer{
+        position: fixed;
+        bottom: 0;
+      }
     </style>
     <title>Geocaching</title>
     <meta name="description" 
           content="Shows you your location and the location of where to go.">
   </head>
   <body onload="initialize()">
-    <div id="earth_div"></div>
-    <div class="center">
-    <b class="zoom-button">Zoom</b>
-    <button id="zoom-out" class="zoom-button" onclick="zoomOut()">-</button>
-    <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
+    <div class="container">
+      <div id="earth_div"></div>
+      <div class="center">
+      <b class="zoom-button">Zoom</b>
+      <button id="zoom-out" class="zoom-button" onclick="zoomOut()">-</button>
+      <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
+      </div>
+      <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
+      <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
+      <div id="compass-box">
+        <img id="compass" src="images/compass.png" alt="Compass"/>
+      </div>
+      <div id="description"><b>Hint: </b>Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
+      <div id="footer">Timestamp: <span id="timestamp"></span></div>
     </div>
-    <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
-    <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
-    <div id="compass-box">
-      <img id="compass" src="images/compass.png" alt="Compass"/>
-    </div>
-    <div id="description"><b>Hint: </b>Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
   </body>
 </html>
