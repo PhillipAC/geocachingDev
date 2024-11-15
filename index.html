@@ -53,7 +53,7 @@
             document.getElementById("distance").innerHTML = "" + distanceInKm(userX, userY, targetX, targetY) * 3280.84 + " feet";
             document.getElementById("compass").style.transform = "rotate("+location.coords.heading+"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
-          });
+          }, function(x){}, {enableHighAccuracy: true});
         }, 500)
       }
 
