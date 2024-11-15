@@ -16,13 +16,14 @@
 	      targetMarker = WE.marker([34.6267, -86.470968]).addTo(earth);
 		    targetMarker.bindPopup("Target", {maxWidth: 120, closeButton: true});
         
-        earth.setView([34.657264, -86.485851], 15);
+        earth.setView([34.657264, -86.485851], 18);
         setInterval(() => {
           navigator.geolocation.getCurrentPosition(function(location) {
             userX = location.coords.latitude;
             userY = location.coords.longitude;
             userMarker.setPosition(userX, userY)
             earth.setView([userX, userY])
+            console.log(location.coords)
             document.getElementById("compass").style.transform = "rotate("+location.coords.heading+"deg)";
             document.getElementById("coordinates").innerHTML = userX + " , " + userY;
           });
