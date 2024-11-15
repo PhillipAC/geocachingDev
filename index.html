@@ -55,7 +55,7 @@
             if(location.coords.heading != null)
               rot = location.coords.heading;
             document.getElementById("heading").innerHTML = rot;
-            document.getElementById("compass").style.transform = "rotate(" + (-1 * rot)+"deg)";
+            document.getElementById("compass").style.transform = "rotate(" + rot +"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
             document.getElementById("timestamp").innerHTML = location.timestamp;   
           }, function(x){}, {enableHighAccuracy: true});
@@ -147,9 +147,8 @@
       <div id="compass-box">
         <img id="compass" src="images/compass.png" alt="Compass"/>
       </div>
-      <div id="description"><b>Hint: </b>Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
-      <div>Heading: <span id="heading"></span></div>
-      <div id="footer">v1.6 Timestamp: <span id="timestamp"></span></div>
+      <div id="description"><b>Hint: </b>A hint place holder that I am putting right here.</div>
+      <div id="footer">v1.7 Timestamp: <span id="timestamp"></span></div>
     </div>
   </body>
 </html>
