@@ -8,24 +8,49 @@
       var userMarker;
       var userX = 34.657264;
       var userY = -86.485851;
+      var targetX = 34.640572;
+      var targetY = -86.479275;
       var speed = 0.00001;
       var zoom = 18;
+
+      function degreesToRadians(degrees) {
+          return degrees * (Math.PI / 180);
+      }
+
+      function distanceInKm(coord1x, coord1y, coord2x, coord2y) {
+          const R = 6371;
+          const lat1 = degreesToRadians(coord1x);
+          const lon1 = degreesToRadians(coord1y);
+          const lat2 = degreesToRadians(coord2x);
+          const lon2 = degreesToRadians(coord2y);
+
+          const dLat = lat2 - lat1;
+          const dLon = lon2 - lon1;
+
+          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1) * Math.cos(lat2) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+          return R * c;
+      }
 
       function initialize() {
         earth = new WE.map('earth_div');
         WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(earth); 
-        userMarker = WE.marker([34.657264, -86.485851]).addTo(earth);
+        userMarker = WE.marker([userX, userY]).addTo(earth);
         userMarker.bindPopup("User", {maxWidth: 120, closeButton: true});
-	      targetMarker = WE.marker([34.640572,-86.479275]).addTo(earth);
+	      targetMarker = WE.marker([targetX, targetY]).addTo(earth);
 		    targetMarker.bindPopup("Target", {maxWidth: 120, closeButton: true});
         
-        earth.setView([34.657264, -86.485851], zoom);
+        earth.setView([userX, userY], zoom);
         setInterval(() => {
           navigator.geolocation.getCurrentPosition(function(location) {
             userX = location.coords.latitude;
             userY = location.coords.longitude;
             userMarker.setPosition(userX, userY)
             earth.setView([userX, userY])
+            document.getElementById("distance").innerHTML = "" + distanceInKm(userX, userY, targetX, targetY) * 3280.84 + " feet";
             document.getElementById("compass").style.transform = "rotate("+location.coords.heading+"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
           });
@@ -58,10 +83,14 @@
         margin-left: 5vw;
         font-size: 2vh;
       }
+      #distance-area{
+        margin-left: 5vw;
+        font-size: 2vh;
+      }
       #compass{
         float: right;
         right: 0;
-        height: 45vh;
+        width: 45vw;
       }
       #description{
         margin-left: 5vw;
@@ -89,6 +118,7 @@
     <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
     </div>
     <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
+    <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
     <img id="compass" src="images/compass.png" alt="Compass"/>
     <div id="description"><b>Hint: </b>Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
   </body>
