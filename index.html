@@ -23,7 +23,7 @@
             userY = location.coords.longitude;
             userMarker.setPosition(userX, userY)
             earth.setView([userX, userY])
-            document.getElementById("compass").style = "transform: rotate("+location.coords.heading+"deg)";
+            document.getElementById("compass").style.transform = "rotate("+location.coords.heading+"deg)";
             document.getElementById("coordinates").innerHTML = userX + " , " + userY;
           });
         }, 500)
