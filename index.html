@@ -53,7 +53,7 @@
             earth.setView([userX, userY])
             document.getElementById("distance").innerHTML = "" + distanceInKm(userX, userY, targetX, targetY) * 3280.84 + " feet";
             rot = location.coords.heading;
-            document.getElementById("compass").style.transform = "rotate("+360 - rot+"deg)";
+            document.getElementById("compass").style.transform = "rotate(" + (-1 * rot)+"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
             document.getElementById("timestamp").innerHTML = location.timestamp;   
           }, function(x){}, {enableHighAccuracy: true});
@@ -146,7 +146,7 @@
         <img id="compass" src="images/compass.png" alt="Compass"/>
       </div>
       <div id="description"><b>Hint: </b>Something adsfd safafdfadfafdf dafdfadgrgrgfbfbfs htrsbtsbtsbt</div>
-      <div id="footer">Timestamp: <span id="timestamp"></span></div>
+      <div id="footer">v1.5 Timestamp: <span id="timestamp"></span></div>
     </div>
   </body>
 </html>
