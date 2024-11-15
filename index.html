@@ -45,7 +45,7 @@
         userMarker.bindPopup("User", {maxWidth: 120, closeButton: true});
 	      targetMarker = WE.marker([targetX, targetY]).addTo(earth);
 		    targetMarker.bindPopup("Target", {maxWidth: 120, closeButton: true});
-        
+        var markerCustom = WE.marker([userX, userY], '/images/compass.png', 100, 24).addTo(earth);
         earth.setView([userX, userY], zoom);
         nextWait = Date.now() + minimumWait;
         getPosition();
@@ -93,6 +93,11 @@
       function toDecimal(value, decimalCount)
       {
         return Number.parseFloat(value).toFixed(decimalCount);
+      }
+
+      function copy()
+      {
+        navigator.clipboard.writeText(userX + ", " + userY);
       }
 
     </script>
@@ -165,6 +170,7 @@
       <b class="zoom-button">Zoom</b>
       <button id="zoom-out" class="zoom-button" onclick="zoomOut()">-</button>
       <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
+      <button id="copy" class="zoom-button" onclick="copy()">Copy Coords</button>
       <div id="compass-box">
         <img id="compass" src="images/compass.png" alt="Compass"/>
       </div>
