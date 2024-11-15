@@ -53,7 +53,7 @@
             earth.setView([userX, userY])
             document.getElementById("distance").innerHTML = "" + distanceInKm(userX, userY, targetX, targetY) * 3280.84 + " feet";
             rot = location.coords.heading;
-            document.getElementById("compass").style.transform = "rotate("+rot+"deg)";
+            document.getElementById("compass").style.transform = "rotate("+360 - rot+"deg)";
             document.getElementById("coordinate-numbers").innerHTML = userX + " , " + userY;
             document.getElementById("timestamp").innerHTML = location.timestamp;   
           }, function(x){}, {enableHighAccuracy: true});
