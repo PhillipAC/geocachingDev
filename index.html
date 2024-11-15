@@ -13,6 +13,7 @@
       var speed = 0.00001;
       var zoom = 18;
       var rot = 0;
+      var bearing = 0;
       var minimumWait = 200;
       var nextWait;
 
@@ -65,8 +66,13 @@
           document.getElementById("distance").innerHTML = "" + toDecimal(distanceInKm(userX, userY, targetX, targetY) * 3280.84, 2) + " feet";
           if(location.coords.heading != null)
             rot = location.coords.heading;
+          bearing = angleFromCoordinate(userX, userY, targetX, targetY);
+          console.log(bearing);
+          console.log(rot);
+          var difRot = bearing - rot;
           earth.setHeading(-rot);
           document.getElementById("compass").style.transform = "rotate(-" + rot +"deg)";
+          document.getElementById("bearing").style.transform = "rotate("+ difRot +"deg)";
           document.getElementById("coordinate-numbers").innerHTML = "<br>" +userX + "<br>" + userY;
           document.getElementById("timestamp").innerHTML = location.timestamp; 
           var currentTime = Date.now();
@@ -96,6 +102,22 @@
         return Number.parseFloat(value).toFixed(decimalCount);
       }
 
+      function angleFromCoordinate(lat1, long1, lat2,long2) {
+
+          dx = (long2 - long1);
+
+          y = Math.sin(dx*Math.PI/180) * Math.cos(lat2*Math.PI/180);
+          x = Math.cos(lat1*Math.PI/180) * Math.sin(lat2*Math.PI/180) - Math.sin(lat1*Math.PI/180)
+                  * Math.cos(lat2*Math.PI/180) * Math.cos(dx*Math.PI/180);
+
+          brng = Math.atan2(y, x);
+
+          brng = brng*(180/Math.PI);
+          brng = (brng + 360) % 360;
+          
+          return brng;
+      }
+
       function copy()
       {
         navigator.clipboard.writeText(userX + ", " + userY);
@@ -121,21 +143,36 @@
         float: right; 
         width: 45vw;
         height: 45vw;
-        /*border-width: 1px;
-        border-color: black;
-        border-style: solid;
-        border-radius: 20px;*/
         display: flex;
         align-items: center;
         justify-content: center;
       }
       #compass{
         float: center;
-        right: 0;
+        position: absolute;
         width: 30vw;
         border-style: solid;
         border-color: black;
         border-radius: 100%;
+      }
+      #bearing{
+        float: center;
+        position: absolute;
+        width: 25vw;
+        height: 25vw;
+        z-index: 5;
+      }
+      #bearing-marker{
+        top: 0;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 2vw;
+        height: 2vw;
+        border-radius: 100%;
+        border-style: solid;
+        border-color: black;
+        background-color: #000000a6;
       }
       #description{
         font-size: 2vh;
@@ -174,11 +211,12 @@
       <button id="copy" class="zoom-button" onclick="copy()">Copy Coords</button>
       <div id="compass-box">
         <img id="compass" src="images/compass.png" alt="Compass"/>
+        <div id="bearing"><div id="bearing-marker"></div></div>
       </div>
       <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
       <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>Beneath a root where the final tortoise-shell stands when heading waterfall way. A yellow diamond points the way. </div>
-      <div id="footer">v1.14 Timestamp: <span id="timestamp"></span></div>
+      <div id="footer">v1.15 Timestamp: <span id="timestamp"></span></div>
     </div>
   </body>
 </html>
