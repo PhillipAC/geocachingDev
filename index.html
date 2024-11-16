@@ -110,7 +110,7 @@
         }
         if(currentHeading > heading)
         {
-          currentHeading -= moveSpeed;
+          currentHeading -= rotationSpeed;
           if(currentHeading < heading)
           {
             currentHeading = heading;
@@ -309,11 +309,13 @@
       <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
       <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>Beneath a root where the final tortoise-shell stands when heading waterfall way. A yellow diamond points the way. </div>
-      <div id="footer">v1.18.4 Timestamp: <span id="timestamp"></span></div>
-      <div>realLocation:<div id="realLocation"></div></div>
-      <div>realHeading<div id="realHeading"></div></div>
-      <div>currentHeading<div id="currentHeading"></div></div>
-      <div>realBearing<div id="realBearing"></div></div>
+      <div id="footer">v1.18.5 Timestamp: <span id="timestamp"></span></div>
+      <div id="debug">
+        <div>realLocation:<div id="realLocation"></div></div>
+        <div>realHeading<div id="realHeading"></div></div>
+        <div>currentHeading<div id="currentHeading"></div></div>
+        <div>realBearing<div id="realBearing"></div></div>
+      </div>
     </div>
   </body>
 </html>
