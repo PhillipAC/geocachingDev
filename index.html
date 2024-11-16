@@ -160,6 +160,13 @@
         navigator.clipboard.writeText(userLat + ", " + userLong);
       }
 
+      function setCoordinates() {
+        coords = prompt("New Target (lat, long)", "34.8346373, -85.4814203").split(', ');
+        targetLat = coords[0];
+        targetLong = coords[1];
+        targetMarker.setPosition(targetLat, targetLong);
+      }
+
       function degreesToRadians(degrees) {
           return degrees * (Math.PI / 180);
       }
@@ -302,6 +309,7 @@
       <button id="zoom-out" class="zoom-button" onclick="zoomOut()">-</button>
       <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
       <button id="copy" class="zoom-button" onclick="copy()">Copy Coords</button>
+      <button id="setCoordinates" class="zoom-button" onclick="setCoordinates()">Update Target</button>
       <div id="compass-box">
         <img id="compass" src="images/compass.png" alt="Compass"/>
         <div id="bearing"><div id="bearing-marker"></div></div>
@@ -309,7 +317,7 @@
       <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
       <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>Beneath a root where the final tortoise-shell stands when heading waterfall way. A yellow diamond points the way. </div>
-      <div id="footer">v1.18.6 Timestamp: <span id="timestamp"></span></div>
+      <div id="footer">v1.18.7 Timestamp: <span id="timestamp"></span></div>
       <div id="debug" style="display: none;">
         <div>realLocation:<div id="realLocation"></div></div>
         <div>realHeading<div id="realHeading"></div></div>
