@@ -6,90 +6,134 @@
       var eath;
       var targetMarker;
       var userMarker;
-      var userX = 34.8346373;
-      var userY = -85.4814203;
-      var targetX = 34.8346373;
-      var targetY = -85.4814203;
-      var speed = 0.00001;
+      var userLat = 34.8346373;
+      var userLong = -85.4814203;
+      var targetLat = 34.8346373;
+      var targetLong = -85.4814203;
       var zoom = 18;
-      var rot = 0;
+      var heading = 0;
       var bearing = 0;
+      var locationTimestamp = 0;
+      var currentUserLat = userLat;
+      var currentUserLong = userLong;
+      var currentHeading = heading;
+      var moveSpeed = .000001;
+      var rotationSpeed = 0.1;
       var minimumWait = 200;
-      var nextWait;
+      var nextWait = 0;
+      var first = true;
       const queryString = window.location.search;
       const urlParms = new URLSearchParams(queryString);
-
-      function degreesToRadians(degrees) {
-          return degrees * (Math.PI / 180);
-      }
-
-      function distanceInKm(coord1x, coord1y, coord2x, coord2y) {
-          const R = 6371;
-          const lat1 = degreesToRadians(coord1x);
-          const lon1 = degreesToRadians(coord1y);
-          const lat2 = degreesToRadians(coord2x);
-          const lon2 = degreesToRadians(coord2y);
-
-          const dLat = lat2 - lat1;
-          const dLon = lon2 - lon1;
-
-          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                    Math.cos(lat1) * Math.cos(lat2) *
-                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-          return R * c;
-      }
 
       function initialize() {
         if(urlParms.has('lat') && urlParms.has('long'))
         {
-          targetX = urlParms.get('lat');
-          targetY = urlParms.get('long');
-          console.log(targetX + ', ' + targetY)
+          targetLat = urlParms.get('lat');
+          targetLong = urlParms.get('long');
+          console.log(targetLat + ', ' + targetLong)
         }
 
         earth = new WE.map('earth_div');
         WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(earth); 
-        userMarker = WE.marker([userX, userY]).addTo(earth);
+        userMarker = WE.marker([userLat, userLong]).addTo(earth);
         userMarker.bindPopup("User", {maxWidth: 120, closeButton: true});
-	      targetMarker = WE.marker([targetX, targetY]).addTo(earth);
+	      targetMarker = WE.marker([targetLat, targetLong]).addTo(earth);
 		    targetMarker.bindPopup("Target", {maxWidth: 120, closeButton: true});
-        var markerCustom = WE.marker([userX, userY], '/images/compass.png', 100, 24).addTo(earth);
-        earth.setView([userX, userY], zoom);
+        var markerCustom = WE.marker([userLat, userLong], '/images/compass.png', 100, 24).addTo(earth);
+        earth.setView([userLat, userLong], zoom);
         nextWait = Date.now() + minimumWait;
         getPosition();
+        requestAnimationFrame(animate);
       }
 
       function getPosition()
       {
-        navigator.geolocation.getCurrentPosition(updateUI, function(x){}, {enableHighAccuracy: true});
+        navigator.geolocation.getCurrentPosition(updateLocationData, function(x){}, {enableHighAccuracy: true});
       }
 
-      function updateUI(location)
+      function updateLocationData(location)
       {
-          userX = location.coords.latitude;
-          userY = location.coords.longitude;
-          userMarker.setPosition(userX, userY)
-          earth.setView([userX, userY])
-          document.getElementById("distance").innerHTML = "" + toDecimal(distanceInKm(userX, userY, targetX, targetY) * 3280.84, 2) + " feet";
-          if(location.coords.heading != null)
-           rot = location.coords.heading;
-          bearing = angleFromCoordinate(userX, userY, targetX, targetY);
-          console.log(bearing);
-          console.log(rot);
-          var difRot = bearing - rot;
-          earth.setHeading(-rot);
-          document.getElementById("compass").style.transform = "rotate(-" + rot +"deg)";
-          document.getElementById("bearing").style.transform = "rotate("+ difRot +"deg)";
-          document.getElementById("coordinate-numbers").innerHTML = "<br>" +userX + "<br>" + userY;
-          document.getElementById("timestamp").innerHTML = location.timestamp; 
-          var currentTime = Date.now();
-          var timeout = nextWait - currentTime
-          if(timeout < 0)
-            timeout = 0;
-          nextWait = Date.now() + minimumWait;
-          setTimeout(getPosition, timeout)
+        locationTimestamp = location.timestamp;
+        userLat = location.coords.latitude;
+        userLong = location.coords.longitude;
+        if(location.coords.heading != null)
+         heading = location.coords.heading;
+        bearing = angleFromCoordinate(userLat, userLong, targetLat, targetLong);
+        var currentTime = Date.now();
+        var timeout = nextWait - currentTime
+        if(first)
+        {
+          currentUserLat = userLat;
+          currentUserLong = userLong;
+          currentHeading = heading;
+          first = false;
+        }
+        if(timeout < 0)
+          timeout = 0;
+        nextWait = Date.now() + minimumWait;
+        setTimeout(getPosition, timeout)
+      }
+
+      function animate(timestamp)
+      {
+        if(currentUserLat > userLat)
+        {
+          currentUserLat -= moveSpeed;
+          if(currentUserLat < userLat)
+          {
+            currentUserLat = userLat;
+          }  
+        }
+        else if(currentUserLat < userLat)
+        {
+          currentUserLat += moveSpeed;
+          if(currentUserLat > userLat)
+          {
+            currentUserLat = userLat;
+          }
+        }
+        if(currentUserLong > userLong)
+        {
+          currentUserLong -= moveSpeed;
+          if(currentUserLong < userLong)
+          {
+            currentUserLong = userLong;
+          }  
+        }
+        else if(currentUserLong < userLong)
+        {
+          currentUserLong += moveSpeed;
+          if(currentUserLong > userLong)
+          {
+            currentUserLong = userLong;
+          }
+        }
+        if(currentHeading > heading)
+        {
+          currentHeading -= moveSpeed;
+          if(currentHeading < heading)
+          {
+            currentHeading = heading;
+          }  
+        }
+        else if(currentHeading < heading)
+        {
+          currentHeading += rotationSpeed;
+          if(currentHeading > heading)
+          {
+            currentHeading = heading;
+          }
+        }
+        var difRot = bearing - currentHeading; 
+        userMarker.setPosition(currentUserLat, currentUserLong)
+        earth.setView([currentUserLat, currentUserLong])
+        document.getElementById("distance").innerHTML = "" + toDecimal(distanceInKm(currentUserLong, currentUserLong, targetLat, targetLong) * 3280.84, 2) + " feet";
+        earth.setHeading(-currentHeading);
+        document.getElementById("compass").style.transform = "rotate(-" + currentHeading +"deg)";
+        document.getElementById("bearing").style.transform = "rotate("+ difRot +"deg)";
+        document.getElementById("coordinate-numbers").innerHTML = "<br>" + currentUserLat + "<br>" + currentUserLong;
+        document.getElementById("timestamp").innerHTML = locationTimestamp;
+        requestAnimationFrame(animate);
       }
 
       function zoomIn() {
@@ -104,6 +148,33 @@
         if(zoom > 0)
           zoom--;
         earth.setZoom(zoom);
+      }
+
+      function copy()
+      {
+        navigator.clipboard.writeText(userLat + ", " + userLong);
+      }
+
+      function degreesToRadians(degrees) {
+          return degrees * (Math.PI / 180);
+      }
+
+      function distanceInKm(coord1x, coord1y, coord2x, coord2y) {
+        const R = 6371;
+        const lat1 = degreesToRadians(coord1x);
+        const lon1 = degreesToRadians(coord1y);
+        const lat2 = degreesToRadians(coord2x);
+        const lon2 = degreesToRadians(coord2y);
+
+        const dLat = lat2 - lat1;
+        const dLon = lon2 - lon1;
+
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1) * Math.cos(lat2) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
       }
 
       function toDecimal(value, decimalCount)
@@ -125,11 +196,6 @@
           brng = (brng + 360) % 360;
           
           return brng;
-      }
-
-      function copy()
-      {
-        navigator.clipboard.writeText(userX + ", " + userY);
       }
 
     </script>
