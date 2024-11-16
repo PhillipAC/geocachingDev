@@ -191,6 +191,10 @@
         width: 50%;
       }
       .zoom-button{
+        border-style: solid;
+        background-color: white;
+        border-radius: 10px;
+        padding: 1vh;
         font-size: 2vh;
       }
       #footer{
@@ -205,7 +209,6 @@
   <body onload="initialize()">
     <div class="container">
       <div id="earth_div"></div>
-      <b class="zoom-button">Zoom</b>
       <button id="zoom-out" class="zoom-button" onclick="zoomOut()">-</button>
       <button id="zoom-in" class="zoom-button" onclick="zoomIn()">+</button>
       <button id="copy" class="zoom-button" onclick="copy()">Copy Coords</button>
