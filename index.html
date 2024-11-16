@@ -74,7 +74,7 @@
           earth.setView([userX, userY])
           document.getElementById("distance").innerHTML = "" + toDecimal(distanceInKm(userX, userY, targetX, targetY) * 3280.84, 2) + " feet";
           if(location.coords.heading != null)
-            rot = location.coords.heading;
+           rot = location.coords.heading;
           bearing = angleFromCoordinate(userX, userY, targetX, targetY);
           console.log(bearing);
           console.log(rot);
@@ -134,9 +134,15 @@
 
     </script>
     <style>
-      html, body{padding: 0; margin: 0}
+      html, body{
+        padding: 0; 
+        margin: 0;
+        background-color: #191835;
+        color: white;
+      }
       #earth_div{
         margin-bottom: 1vh;
+        border-radius: 10px;
         height: 50vh;
         width: 90vw;
       }
@@ -160,8 +166,11 @@
         float: center;
         position: absolute;
         width: 30vw;
+        padding: 5px;
+        border-width: 2px;
         border-style: solid;
-        border-color: black;
+        border-color: #4d81ff;
+        background-color: white;
         border-radius: 100%;
       }
       #bearing{
@@ -180,8 +189,9 @@
         height: 2vw;
         border-radius: 100%;
         border-style: solid;
-        border-color: black;
-        background-color: #000000a6;
+        border-color: white;
+        border-width: 1px;
+        background-color: #470000a6;
       }
       #description{
         font-size: 2vh;
@@ -200,8 +210,8 @@
         width: 50%;
       }
       .zoom-button{
-        border-style: solid;
-        background-color: white;
+        border-style: none;
+        background-color:#4d81ff;
         border-radius: 10px;
         padding: 1vh;
         font-size: 2vh;
@@ -228,7 +238,7 @@
       <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
       <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>Beneath a root where the final tortoise-shell stands when heading waterfall way. A yellow diamond points the way. </div>
-      <div id="footer">v1.16 Timestamp: <span id="timestamp"></span></div>
+      <div id="footer">v1.17 Timestamp: <span id="timestamp"></span></div>
     </div>
   </body>
 </html>
