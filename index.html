@@ -135,6 +135,7 @@
         document.getElementById("coordinate-numbers").innerHTML = "<br>" + currentUserLat + "<br>" + currentUserLong;
         document.getElementById("realLocation").innerHTML = "<br>" + userLat + "<br>" + userLong;
         document.getElementById("realHeading").innerHTML = heading;
+        document.getElementById("currentHeading").innerHTML = currentHeading;
         document.getElementById("realBearing").innerHTML = bearing;
         document.getElementById("timestamp").innerHTML = locationTimestamp;
         requestAnimationFrame(animate);
@@ -308,10 +309,11 @@
       <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
       <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>Beneath a root where the final tortoise-shell stands when heading waterfall way. A yellow diamond points the way. </div>
-      <div id="footer">v1.18.2 Timestamp: <span id="timestamp"></span></div>
-      <div id="realLocation"></div>
-      <div id="realHeading"></div>
-      <div id="realBearing"></div>
+      <div id="footer">v1.18.3 Timestamp: <span id="timestamp"></span></div>
+      <div>realLocation:<div id="realLocation"></div></div>
+      <div>realHeading<div id="realHeading"></div></div>
+      <div>currentHeading<div id="currentHeading"></div></div>
+      <div>realHeading<div id="realBearing"></div></div>
     </div>
   </body>
 </html>
