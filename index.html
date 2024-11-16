@@ -48,7 +48,8 @@
 
       function getPosition()
       {
-        navigator.geolocation.getCurrentPosition(updateLocationData, function(x){}, {enableHighAccuracy: true});
+        navigator.geolocation
+          .getCurrentPosition(updateLocationData, function(x){}, {enableHighAccuracy: true});
       }
 
       function updateLocationData(location)
@@ -58,9 +59,6 @@
         userLong = location.coords.longitude;
         if(location.coords.heading != null)
          heading = location.coords.heading;
-        bearing = angleFromCoordinate(userLat, userLong, targetLat, targetLong);
-        var currentTime = Date.now();
-        var timeout = nextWait - currentTime
         if(first)
         {
           currentUserLat = userLat;
@@ -68,6 +66,8 @@
           currentHeading = heading;
           first = false;
         }
+        var currentTime = Date.now();
+        var timeout = nextWait - currentTime;
         if(timeout < 0)
           timeout = 0;
         nextWait = Date.now() + minimumWait;
@@ -124,9 +124,10 @@
             currentHeading = heading;
           }
         }
+        bearing = angleFromCoordinate(currentUserLat, currentUserLong, targetLat, targetLong);
         var difRot = bearing - currentHeading; 
-        userMarker.setPosition(currentUserLat, currentUserLong)
-        earth.setView([currentUserLat, currentUserLong])
+        userMarker.setPosition(currentUserLat, currentUserLong);
+        earth.setView([currentUserLat, currentUserLong]);
         document.getElementById("distance").innerHTML = "" + toDecimal(distanceInKm(currentUserLong, currentUserLong, targetLat, targetLong) * 3280.84, 2) + " feet";
         earth.setHeading(-currentHeading);
         document.getElementById("compass").style.transform = "rotate(-" + currentHeading +"deg)";
