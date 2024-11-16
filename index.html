@@ -16,6 +16,8 @@
       var bearing = 0;
       var minimumWait = 200;
       var nextWait;
+      const queryString = window.location.search;
+      const urlParms = new URLSearchParams(queryString);
 
       function degreesToRadians(degrees) {
           return degrees * (Math.PI / 180);
@@ -40,6 +42,13 @@
       }
 
       function initialize() {
+        if(urlParms.has('lat') && urlParms.has('long'))
+        {
+          targetX = urlParms.get('lat');
+          targetY = urlParms.get('long');
+          console.log(targetX + ', ' + targetY)
+        }
+
         earth = new WE.map('earth_div');
         WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(earth); 
         userMarker = WE.marker([userX, userY]).addTo(earth);
@@ -219,7 +228,7 @@
       <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
       <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>Beneath a root where the final tortoise-shell stands when heading waterfall way. A yellow diamond points the way. </div>
-      <div id="footer">v1.15 Timestamp: <span id="timestamp"></span></div>
+      <div id="footer">v1.16 Timestamp: <span id="timestamp"></span></div>
     </div>
   </body>
 </html>
