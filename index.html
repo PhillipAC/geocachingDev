@@ -126,9 +126,9 @@
           }
         }
         */
-        var currentHeadingPrime = (currentHeading + 180) % 360
+        var currentHeadingPrime = (currentHeading + 180) % 360;
         var rotationAmount;
-        if(currentHeading <= 90 && (heading < currentHeading || currentHeadingAlpha < heading))
+        if(currentHeading <= 90 && (heading < currentHeading || currentHeadingPrime < heading))
         {
           rotationAmount = rotationSpeed * -1;
         } 
@@ -140,8 +140,8 @@
         {
           rotationAmount = rotationSpeed;
         }
-        currentHeading += rotationSpeed;
-        if(Math.abs(currentHeading - heading) < rotationSpeed)
+        currentHeading += rotationAmount;
+        if(Math.abs(currentHeading - heading) <= rotationSpeed)
         {
           currentHeading = heading;
         }
@@ -338,7 +338,7 @@
       <div id="coordinates"><b>Location:</b> <span id="coordinate-numbers"></span></div>
       <div id="distance-area"><b>Distance:</b> <span id="distance"></span></div>
       <div id="description"><b>Hint: </b>Beneath a root where the final tortoise-shell stands when heading waterfall way. A yellow diamond points the way. </div>
-      <div id="footer">v1.19.2 Timestamp: <span id="timestamp"></span></div>
+      <div id="footer">v1.19.3 Timestamp: <span id="timestamp"></span></div>
       <div id="debug" style="display: none;">
         <div>realLocation:<div id="realLocation"></div></div>
         <div>realHeading<div id="realHeading"></div></div>
