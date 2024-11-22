@@ -26,7 +26,7 @@
       const urlParms = new URLSearchParams(queryString);
 
       function initialize() {
-        document.getElementById("version").innerHTML = "1.19.4";
+        document.getElementById("version").innerHTML = "1.19.5";
         if(urlParms.has('lat') && urlParms.has('long'))
         {
           targetLat = urlParms.get('lat');
@@ -112,7 +112,7 @@
 
         var currentHeadingPrime = (currentHeading + 180) % 360;
         var rotationAmount;
-        if(currentHeading <= 90 && (heading < currentHeading || currentHeadingPrime < heading))
+        if(currentHeading <= 180 && (heading < currentHeading || currentHeadingPrime < heading))
         {
           rotationAmount = rotationSpeed * -1;
         } 
