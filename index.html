@@ -27,11 +27,7 @@
       const urlParms = new URLSearchParams(queryString);
 
       function initialize() {
-        isIOS = !(
-          navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
-          navigator.userAgent.match(/AppleWebKit/)
-        );
-        document.getElementById("version").innerHTML = "1.19.7";
+        document.getElementById("version").innerHTML = "1.19.8";
         if(urlParms.has('lat') && urlParms.has('long'))
         {
           targetLat = urlParms.get('lat');
@@ -49,6 +45,7 @@
         earth.setView([userLat, userLong], zoom);
         nextWait = Date.now() + minimumWait;
         getPosition();
+        getHeading();
         requestAnimationFrame(animate);
       }
 
@@ -59,24 +56,13 @@
       }
 
       function getHeading() {
-        if (isIOS) {
-          DeviceOrientationEvent.requestPermission()
-            .then((response) => {
-              if (response === "granted") {
-                window.addEventListener("deviceorientation", headingHandler, true);
-              } else {
-                alert("has to be allowed!");
-              }
-            })
-            .catch(() => alert("not supported"));
-        } else {
-          window.addEventListener("deviceorientationabsolute", headingHandler, true);
-        }
+        window.addEventListener("deviceorientation", headingHandler, true);
       }
 
       function headingHandler(e) {
-        compass = e.webkitCompassHeading || Math.abs(e.alpha - 360);
+        compass = Math.abs(e.alpha - 360);
         heading = compass;
+        getHeading();
       }
 
       function updateLocationData(location)
@@ -84,8 +70,8 @@
         locationTimestamp = location.timestamp;
         userLat = location.coords.latitude;
         userLong = location.coords.longitude;
-        if(location.coords.heading != null)
-         heading = location.coords.heading;
+        // if(location.coords.heading != null)
+        //  heading = location.coords.heading;
         if(first)
         {
           currentUserLat = userLat;
@@ -136,8 +122,8 @@
           }
         }
 
-        /*var currentHeadingPrime = (currentHeading + 180) % 360;
-        var rotationAmount;
+        var currentHeadingPrime = (currentHeading + 180) % 360;
+        /*var rotationAmount;
         if(currentHeading != heading)
         {
           if(currentHeading < 180 && (heading < currentHeading || currentHeadingPrime < heading))
